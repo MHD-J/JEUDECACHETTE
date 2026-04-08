@@ -1,56 +1,33 @@
-#include "../include/Menu.h"
-#include "../include/Constants.h"
+#ifndef MENU_H
+#define MENU_H
 
+#include <SFML/Graphics.hpp>
+#include <vector>
+#include <string>
 
-Menu::Menu(sf::Font& font){
+#define MAX_ITEMS 3 // Jouer, À propos, Quitter
 
-    options[0].setFont(font);
-    options[0].setString("Jouer");
-    options[0].setCharacterSize(Constants::MENU_OPTION_SIZE);
-    options[0].setPosition(200, Constants::MENU_OPTION_START_Y);
-    options[0].setFillColor(Constants::COLOR_HIGH_LIGHT);
-    options[1].setFont(font);
-    options[1].setString("A propos");
-    options[1].setCharacterSize(Constants::MENU_OPTION_SIZE);
-    options[1].setPosition(200, Constants::MENU_OPTION_START_Y + Constants::MENU_OPTION_SPACING);
-    options[1].setFillColor(sf::Color::White);
-    options[2].setFont(font);
-    options[2].setString("Quitter");
-    options[2].setCharacterSize(Constants::MENU_OPTION_SIZE);
-    options[2].setPosition(200, Constants::MENU_OPTION_START_Y + Constants::MENU_OPTION_SPACING * 2);
-    options[2].setFillColor(sf::Color::White);
-    selectedindex = 0;
-}
-void Menu::draw(sf::RenderWindow& window){
-    for (int i = 0; i < 3; i++)
-    {
-       if(selectedindex == i){
-        options[i].setFillColor(Constants::COLOR_HIGH_LIGHT);
-       }else{
-        options[i].setFillColor(Constants::COLOR_TEXT);
-       }
-        window.draw(options[i]);
-    }
-}
-void Menu::handleInput(sf::Event& event,GameState& currentState){
+class Menu {
+private:
+    sf::Font font;
+    sf::Text menuItems[MAX_ITEMS];
+    sf::Texture backgroundTexture;
+    sf::Sprite backgroundSprite;
+    int selectedItemIndex;
 
-    if (event.type == sf::Event::KeyReleased) {
-        if (event.key.code == sf::Keyboard::Up) {
-            selectedindex = (selectedindex - 1 + 3) % 3;
-        }
-        else if (event.key.code == sf::Keyboard::Down) {
-            selectedindex = (selectedindex + 1) % 3;
-        }
-        else if (event.key.code == sf::Keyboard::Return) {
-            if (selectedindex == 0) {
-                currentState = GameState::PLAYING;
-            }
-            else if (selectedindex == 1) {
-                currentState = GameState::ABOUT;
-            }
-            else if (selectedindex == 2) {
-                currentState = GameState::QUIT;
-            }
-        }
-    }
-} 
+public:
+    Menu(float width, float height);
+    
+    void draw(sf::RenderWindow& window);
+    void moveUp();
+    void moveDown();
+    
+    // Pour savoir quel bouton est cliqué
+    int getPressedItem() { return selectedItemIndex; }
+    
+    // Optionnel : Gestion de la souris
+    void updateMouse(sf::Vector2i mousePos);
+    int handleClick(sf::Vector2i mousePos);
+};
+
+#endif

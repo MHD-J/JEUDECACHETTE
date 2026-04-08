@@ -1,7 +1,15 @@
-#ifndef Collision_H
-#define Collision_H
+#ifndef COLLISION_H
+#define COLLISION_H
 
 #include <SFML/Graphics.hpp>
+#include "../include/Obstacle.h"
 
-bool checkCollision(const sf::FloatRect & rect1,const sf::FloatRect & rect2);
+class Collision {
+public:
+    // Fonction qui renvoie VRAI si le joueur touche un obstacle
+    static bool checkCollision(const sf::Sprite& player, Obstacle* obstacle) {
+        return player.getGlobalBounds().intersects(obstacle->getBounds());
+    }
+};
+
 #endif

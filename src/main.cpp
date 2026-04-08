@@ -1,18 +1,25 @@
-#include <SFML/Graphics.hpp>
-#include "Constants.h"
-#include "Game.h"
+#include <vector>
+#include "Obstacle.h"
 
-int main()
-{
-    sf::RenderWindow window(sf::VideoMode(Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT), Constants::WINDOW_TITLE);
-    window.setVerticalSyncEnabled(true);
-    sf::Font font;
-    if (!font.loadFromFile(Constants::FONT_PATH))
-    {
-        return -1;
-    }
-    Game game(window,font);
-    game.run();
-    
-    return 0;
+// ... dans le main ...
+std::vector<Obstacle*> mesObstacles;
+
+// On ajoute les 4 types différents
+mesObstacles.push_back(new Pierre(300, 520));
+mesObstacles.push_back(new Mine(600, 550));
+mesObstacles.push_back(new Drone(400, 200));
+mesObstacles.push_back(new BarqueEau(800, 540));
+
+// --- Dans la boucle de jeu ---
+float dt = clock.restart().asSeconds();
+
+for (auto obs : mesObstacles) {
+    obs->update(dt); // Le drone bouge, la barque flotte, la mine reste fixe
 }
+
+// --- Dans la partie dessin ---
+window.clear();
+for (auto obs : mesObstacles) {
+    obs->draw(window);
+}
+window.display();
