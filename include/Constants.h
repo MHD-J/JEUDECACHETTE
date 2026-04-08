@@ -2,14 +2,15 @@
 #define CONSTANTS_H
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include <string>
 
 namespace Constants
 {
 
     // ========== Window Settings ==========
-    const unsigned int WINDOW_WIDTH = 1200;
-    const unsigned int WINDOW_HEIGHT = 1000;
+    const unsigned int WINDOW_WIDTH = 1600;
+    const unsigned int WINDOW_HEIGHT = 900;
     const std::string WINDOW_TITLE = "Jeu de Cachette";
 
     // ========== Frame Rate ==========
@@ -26,22 +27,23 @@ namespace Constants
     // ========== Font Paths ==========
     const std::string FONT_PATH = "assets/fonts/arial.ttf";
 
-    // ========== Image Paths ==========
-    const std::string BACKGROUND_IMAGE = "assets/images/background.png";
+    // ========== Image Paths ==========//
+    const std::string BACKGROUND_IMAGE = "assets/images/back.png";
+    const float BACKGROUND_SPEED = 2.0f;
     const std::string PLAYER_IMAGE = "assets/images/player.png";
     const std::string BUNKER_IMAGE = "assets/images/bunker.png";
     const std::string OBSTACLE_GROUND_IMAGE = "assets/images/obstacle_ground.png";
     const std::string OBSTACLE_AIR_IMAGE = "assets/images/obstacle_air.png";
 
     // ========== Player Constants ==========
-    const float PLAYER_WIDTH = 40.0f;
-    const float PLAYER_HEIGHT = 50.0f;
-    const float PLAYER_CROUCH_HEIGHT = 30.0f;
+    const float PLAYER_WIDTH = 120.0f;
+    const float PLAYER_HEIGHT = 180.0f;
+    const float PLAYER_CROUCH_HEIGHT = 130.0f;
     const float PLAYER_SPEED_X = 5.0f;
-    const float PLAYER_JUMP_FORCE = -12.0f;
-    const float PLAYER_GRAVITY = 0.8f;
-    const float GROUND_Y = 500.0f;
-    const float PLAYER_START_X = 150.0f;
+    const float PLAYER_JUMP_FORCE = -18.0f;
+    const float PLAYER_GRAVITY = 0.9f;
+    const float GROUND_Y = 760.0f;
+    const float PLAYER_START_X = 200.0f;
     const float PLAYER_START_Y = GROUND_Y - PLAYER_HEIGHT;
 
     // ========== Obstacle Constants ==========
@@ -54,13 +56,15 @@ namespace Constants
     const float GROUND_OBSTACLE_Y = GROUND_Y - OBSTACLE_HEIGHT;
 
     // ========== Gameplay Constants ==========
-    const float INITIAL_TIME = 60.0f;
+    const float INITIAL_TIME = 120.0f;
     const float TOTAL_DISTANCE = 1000.0f;
 
     // ========== Bunker Constants ==========
-    const float BUNKER_WIDTH = 50.0f;
-    const float BUNKER_HEIGHT = 60.0f;
-    const float BUNKER_Y = GROUND_Y - BUNKER_HEIGHT;
+    const float BUNKER_WIDTH = 350.0f;
+    const float BUNKER_HEIGHT = 360.0f;
+    const float BUNKER_Y = 460.0f;
+    const float BUNKER_X = 2800.0f;
+    const std::string BUNKER_IMAGE_PATH = "assets/images/bunker.png";
 
     // ========== Menu Constants ==========
     const float MENU_TITLE_SIZE = 48.0f;
