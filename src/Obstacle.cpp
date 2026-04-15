@@ -1,56 +1,113 @@
 #include "../include/Obstacle.h"
+#include "../include/Constants.h"
 #include <iostream>
 #include <cmath>
 
-// Méthodes communes
-bool Obstacle::load(const std::string& path, float x, float y) {
-    if (!texture.loadFromFile(path)) {
-        std::cerr << "Erreur chargement : " << path << std::endl;
-        return false;
-    }
-    sprite.setTexture(texture);
+float Obstacle::currentSpeed = 6.0f;
+void Obstacle::draw(sf::RenderWindow &window)
+{
+    window.draw(sprite);
+}
+
+sf::FloatRect Obstacle::getBounds() const
+{
+    return sprite.getGlobalBounds();
+}
+
+// COLLISION BOUNDS CORRIGÉE - Réduction beaucoup plus agressive
+sf::FloatRect Obstacle::getCollisionBounds() const
+{
+    sf::FloatRect full = sprite.getGlobalBounds();
+
+    // Réduction de 40% horizontale et 35% verticale pour éviter les collisions fantômes
+    float shrinkX = full.width * 0.40f;
+    float shrinkY = full.height * 0.35f;
+
+    return sf::FloatRect(
+        full.left + shrinkX / 2,
+        full.top + shrinkY / 2,
+        full.width - shrinkX,
+        full.height - shrinkY);
+}
+
+bool Obstacle::isOffScreen() const
+{
+    return (sprite.getPosition().x + Constants::OBSTACLE_WIDTH < 0);
+}
+
+void Obstacle::setPosition(float px, float py)
+{
+    x = px;
+    y = py;
     sprite.setPosition(x, y);
-    return true;
 }
 
-void Obstacle::draw(sf::RenderWindow& window) { window.draw(sprite); }
-sf::FloatRect Obstacle::getBounds() const { return sprite.getGlobalBounds(); }
-
-// --- PIERRE ---
-Pierre::Pierre(float x, float y) { load("assets/textures/pierre.png", x, y); }
-void Pierre::update(float dt) {} // Ne bouge pas
-
-// --- MINE ---
-Mine::Mine(float x, float y) { load("assets/textures/mine.png", x, y); }
-void Mine::update(float dt) {
-    // Optionnel : faire clignoter la mine
-    static float t = 0; t += dt;
-    sprite.setColor(sf::Color(255, 255, 255, 200 + 55 * std::sin(t * 5)));
+float Obstacle::getX() const
+{
+    return sprite.getPosition().x;
 }
 
-// --- OISEAU ---
-Oiseau::Oiseau(float x, float y) : speed(180.f), startY(y), timer(0.f) {
-    load("assets/textures/oiseau.png", x, y);
-}
-void Oiseau::update(float dt) {
-    timer += dt;
-    // Avance horizontalement + ondule verticalement (sinus)
-    float newY = startY + std::sin(timer * 3.0f) * 40.f;
-    sprite.setPosition(sprite.getPosition().x + speed * dt, newY);
-    
-    if (sprite.getPosition().x > 1200) sprite.setPosition(-100, startY);
-}
-
-// --- SPIDER ---
-Spider::Spider(float x, float y) : startY(y), range(150.f), speed(100.f) {
-    load("assets/textures/spider.png", x, y);
-}
-void Spider::update(float dt) {
-    // L'araignée descend et monte (va-et-vient vertical)
-    static int direction = 1;
-    sprite.move(0, speed * dt * direction);
-    
-    if (std::abs(sprite.getPosition().y - startY) > range) {
-        direction *= -1; // Change de sens
+GroundObstacle::GroundObstacle(float x, float y, int type)
+{
+    std::string path;
+    switch (type)
+    {
+    case 1:
+        path = "assets/images/obstacle1.png";
+        break;
+    case 2:
+        path = "assets/images/obstacle2.png";
+        break;
+    case 3:
+        path = "assets/images/obstacle3.png";
+        break;
+    default:
+        path = "assets/images/obstacle2.png";
+        break;
     }
+
+    if (!texture.loadFromFile(path))
+    {
+        std::cout << "Failed to load: " << path << std::endl;
+    }
+
+    sprite.setTexture(texture);
+
+    float scaleX = Constants::OBSTACLE_WIDTH / texture.getSize().x;
+    float scaleY = Constants::OBSTACLE_HEIGHT / texture.getSize().y;
+    sprite.setScale(scaleX, scaleY);
+    sprite.setPosition(x, y);
+}
+
+void GroundObstacle::update(float dt)
+{
+    sprite.move(-Obstacle::currentSpeed, 0);
+}
+
+AirObstacle::AirObstacle(float x, float y) : timer(0), startY(y)
+{
+    std::string path = "assets/images/drone.png";
+
+    if (!texture.loadFromFile(path))
+    {
+        std::cout << "Failed to load: " << path << std::endl;
+    }
+
+    sprite.setTexture(texture);
+
+    float scaleX = Constants::AIR_OBSTACLE_WIDTH / texture.getSize().x;
+    float scaleY = Constants::AIR_OBSTACLE_HEIGHT / texture.getSize().y;
+    sprite.setScale(scaleX, scaleY);
+    sprite.setPosition(x, y);
+}
+
+void AirObstacle::update(float dt)
+{
+    timer += dt;
+
+    float newY = startY + std::sin(timer * 2.5f) * 12.0f;
+
+    sprite.setPosition(
+        sprite.getPosition().x - Obstacle::currentSpeed,
+        newY);
 }

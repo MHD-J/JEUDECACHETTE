@@ -1,10 +1,25 @@
-class ProgressBar {
-private:
-    sf::RectangleShape background;
-    sf::RectangleShape foreground; // La barre qui se remplit
-    float totalDistance;
+#ifndef PROGRESSBAR_H
+#define PROGRESSBAR_H
+
+#include <SFML/Graphics.hpp>
+
+class ProgressBar
+{
 public:
-    ProgressBar(float width, float height, float totalDist);
-    void update(float playerX); // On passe la position X du joueur
-    void draw(sf::RenderWindow& window);
+    ProgressBar(sf::Font &font);
+    void update(float distance);
+    void draw(sf::RenderWindow &window);
+    void reset();
+
+private:
+    sf::RectangleShape backgroundBar;
+    sf::RectangleShape fillBar;
+    sf::Text distanceText;
+
+    float maxDistance;
+    float currentDistance;
+    float barWidth;
+    float barHeight;
 };
+
+#endif

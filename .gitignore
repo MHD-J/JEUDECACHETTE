@@ -1,5 +1,5 @@
-\build
-\vscode
+build/
+.vscode/
 game
 HideAndSeek
 .DS_Store

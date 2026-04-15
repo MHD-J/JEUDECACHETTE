@@ -13,7 +13,8 @@ public:
     void reset();
     bool isExpired() const;
     void draw(sf::RenderWindow &window);
-    void setFont(sf::Font &font); // F كبيرة
+    void setFont(sf::Font &font); 
+    void addTime(float seconds);
 
 private:
     float remainingTime;

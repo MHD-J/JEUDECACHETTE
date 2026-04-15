@@ -8,66 +8,65 @@ class Player
 {
 public:
     Player();
-    void update();
-    void jump();
-    void crouch();
-    void stand();
-    void die();
+    void update(); // Met à jour la position et l'animation
+    void jump();   // Fait sauter le joueur
+    void crouch(); // Met le joueur en position accroupie
+    void stand();  // Remet le joueur debout
+    void die();    // Déclenche l'animation de mort
     void draw(sf::RenderWindow &window);
-    sf::FloatRect getBounds() const;
-    void reset();
-    bool isDead() const;
-    bool isDeathAnimationComplete() const;
+
+    // Gestion des collisions
+    sf::FloatRect getBounds() const;          // Rectangle complet (visuel)
+    sf::FloatRect getCollisionBounds() const; // Rectangle réduit (précis)
+
+    void reset();                          // Réinitialise le joueur
+    bool isDead() const;                   // Vérifie si le joueur est mort
+    bool isDeathAnimationComplete() const; // Animation de mort terminée
+    bool isCrouching() const;              // Vérifie si le joueur est accroupi
+
+    float getX() const { return x; }
+    float getY() const { return y; }
 
 private:
-    // Position
-    float x;
-    float y;
-    float normalY;
-    float slideY;
+    // ========== Position et dimensions ==========
+    float x, y;                      // Position actuelle
+    float normalY, slideY;           // Positions Y (debout / accroupi)
+    float width, height;             // Dimensions actuelles
+    float normalHeight, slideHeight; // Hauteurs (debout / accroupi)
 
-    // Dimensions 
-    float width;
-    float height;
-    float normalHeight;
-    float slideHeight;
+    // ========== Physique ==========
+    float velocityY; // Vitesse verticale
+    float jumpForce; // Force du saut
+    float gravity;   // Gravité
+    float groundY;   // Position Y du sol
 
-    // Physics
-    float velocityY;
-    float jumpForce;
-    float gravity;
-    float groundY;
+    // ========== États ==========
+    bool grounded;               // Au sol ?
+    bool crouching;              // Accroupi ?
+    bool isJumping;              // En train de sauter ?
+    bool dead;                   // Mort ?
+    bool deathAnimationComplete; // Animation de mort terminée ?
 
-    // States
-    bool grounded;
-    bool crouching;
-    bool isJumping;
-    bool dead;
-    bool deathAnimationComplete;
+    // ========== Mise à l'échelle des textures ==========
+    float scaleX, scaleY;                          // Échelle normale
+    float scaleSlideX, scaleSlideY;                // Échelle accroupi
+    float originalWidth, originalHeight;           // Dimensions originales (debout)
+    float slideOriginalWidth, slideOriginalHeight; // Dimensions originales (accroupi)
 
-    // Scale
-    float scaleX;
-    float scaleY;
-    float scaleSlideX;
-    float scaleSlideY;
-    float originalWidth;
-    float originalHeight;
-    float slideOriginalWidth;
-    float slideOriginalHeight;
-
-    // Animation
+    // ========== Sprites et animations ==========
     sf::Sprite sprite;
-    std::vector<sf::Texture> runTextures;
-    std::vector<sf::Texture> idleTextures;
-    std::vector<sf::Texture> jumpTextures;
-    std::vector<sf::Texture> deadTextures;
-    std::vector<sf::Texture> slideTextures;
+    std::vector<sf::Texture> runTextures;   // Animation course
+    std::vector<sf::Texture> idleTextures;  // Animation repos
+    std::vector<sf::Texture> jumpTextures;  // Animation saut
+    std::vector<sf::Texture> deadTextures;  // Animation mort
+    std::vector<sf::Texture> slideTextures; // Animation glissade
 
-    int currentFrame;
-    float frameTime;
-    float elapsedTime;
-    float deathTimer;
+    int currentFrame;  // Image actuelle
+    float frameTime;   // Durée par image
+    float elapsedTime; // Temps écoulé depuis dernière image
+    float deathTimer;  // Temporisateur pour l'animation de mort
 
+    // ========== Types d'animations ==========
     enum AnimState
     {
         IDLE,
@@ -78,8 +77,8 @@ private:
     };
     AnimState animState;
 
-    void updateAnimation();
-    void setAnimation(AnimState state);
+    void updateAnimation();             // Change l'image de l'animation
+    void setAnimation(AnimState state); // Change le type d'animation
 };
 
 #endif

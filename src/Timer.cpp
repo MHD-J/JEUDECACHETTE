@@ -48,13 +48,23 @@ void Timer::stop()
 void Timer::reset()
 {
     remainingTime = initialTime;
-    isRunning = false;
+    // isRunning = false;
     updateText();
 }
 
 bool Timer::isExpired() const
 {
     return remainingTime <= 0.0f;
+}
+
+void Timer::addTime(float seconds)
+{
+    remainingTime += seconds;
+    if (remainingTime < 0.0f)
+        remainingTime = 0.0f;
+    if (remainingTime > initialTime)
+        remainingTime = initialTime;
+    updateText();
 }
 
 void Timer::updateText()
@@ -80,6 +90,7 @@ void Timer::updateText()
         timerText.setString("Time: " + std::to_string(minutes) + ":" + std::to_string(seconds));
     }
 }
+
 
 void Timer::draw(sf::RenderWindow &window)
 {

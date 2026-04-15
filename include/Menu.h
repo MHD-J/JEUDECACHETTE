@@ -2,32 +2,31 @@
 #define MENU_H
 
 #include <SFML/Graphics.hpp>
-#include <vector>
-#include <string>
+#include "GameState.h"
+#include "MenuBackground.h"
 
-#define MAX_ITEMS 3 // Jouer, À propos, Quitter
+class Menu
+{
+public:
+    Menu(sf::Font &font);
+    void setTitleFont(sf::Font &font);
+    void update(float dt); // Nouvelle fonction
+    void draw(sf::RenderWindow &window);
+    void handleInput(sf::Event &event, GameState &currentState, sf::RenderWindow &window);
+    void reset();
 
-class Menu {
 private:
     sf::Font font;
-    sf::Text menuItems[MAX_ITEMS];
-    sf::Texture backgroundTexture;
-    sf::Sprite backgroundSprite;
+    sf::Font titleFont;
+    sf::Text titleText;
+    sf::Text menuItems[3];
     int selectedItemIndex;
 
-public:
-    Menu(float width, float height);
-    
-    void draw(sf::RenderWindow& window);
+    MenuBackground background; // Nouveau
+
     void moveUp();
     void moveDown();
-    
-    // Pour savoir quel bouton est cliqué
-    int getPressedItem() { return selectedItemIndex; }
-    
-    // Optionnel : Gestion de la souris
-    void updateMouse(sf::Vector2i mousePos);
-    int handleClick(sf::Vector2i mousePos);
+    void select(GameState &currentState, sf::RenderWindow &window);
 };
 
 #endif

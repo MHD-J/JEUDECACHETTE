@@ -5,54 +5,50 @@
 #include <vector>
 #include <string>
 
-// Classe parente
-class Obstacle {
+class Obstacle
+{
 protected:
     sf::Sprite sprite;
     sf::Texture texture;
+    float x;
+    float y;
+    static float currentSpeed;
 
 public:
     virtual ~Obstacle() {}
-    bool load(const std::string& path, float x, float y);
     virtual void update(float dt) = 0;
-    void draw(sf::RenderWindow& window);
+    void draw(sf::RenderWindow &window);
+
+    static void setSpeed(float speed) { currentSpeed = speed; }
+    static float getSpeed() { return currentSpeed; }
     sf::FloatRect getBounds() const;
+    sf::FloatRect getCollisionBounds() const;
+
+    bool isOffScreen() const;
+    void setPosition(float px, float py);
+    float getX() const;
+
+    virtual bool isAir() const { return false; }
 };
 
-// --- Obstacle 1 : Pierre (Statique) ---
-class Pierre : public Obstacle {
+class GroundObstacle : public Obstacle
+{
 public:
-    Pierre(float x, float y);
+    GroundObstacle(float x, float y, int type);
     void update(float dt) override;
+    bool isAir() const override { return false; }
 };
 
-// --- Obstacle 2 : Mine (Statique / Danger) ---
-class Mine : public Obstacle {
+class AirObstacle : public Obstacle
+{
 public:
-    Mine(float x, float y);
+    AirObstacle(float x, float y);
     void update(float dt) override;
-};
+    bool isAir() const override { return true; }
 
-// --- Obstacle 3 : Oiseau (Mouvement sinusoïdal en haut) ---
-class Oiseau : public Obstacle {
 private:
-    float speed;
-    float startY;
     float timer;
-public:
-    Oiseau(float x, float y);
-    void update(float dt) override;
-};
-
-// --- Obstacle 4 : Spider (Mouvement vertical / monte et descend) ---
-class Spider : public Obstacle {
-private:
     float startY;
-    float range;
-    float speed;
-public:
-    Spider(float x, float y);
-    void update(float dt) override;
 };
 
 #endif

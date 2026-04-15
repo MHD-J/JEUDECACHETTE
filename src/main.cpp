@@ -1,25 +1,39 @@
-#include <vector>
-#include "Obstacle.h"
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include "../include/Game.h"
+#include "../include/Constants.h"
 
-// ... dans le main ...
-std::vector<Obstacle*> mesObstacles;
+int main()
+{
+    sf::RenderWindow window(
+        sf::VideoMode(Constants::WINDOW_WIDTH, Constants::WINDOW_HEIGHT),
+        Constants::WINDOW_TITLE);
+    window.setFramerateLimit(Constants::FRAME_RATE_LIMIT);
 
-// On ajoute les 4 types différents
-mesObstacles.push_back(new Pierre(300, 520));
-mesObstacles.push_back(new Mine(600, 550));
-mesObstacles.push_back(new Drone(400, 200));
-mesObstacles.push_back(new BarqueEau(800, 540));
+    // Chargement des polices
+    sf::Font fontTitle;
+    sf::Font fontText;
+    sf::Font fontArial;
 
-// --- Dans la boucle de jeu ---
-float dt = clock.restart().asSeconds();
+    if (!fontTitle.loadFromFile(Constants::FONT_PATH_TITLE))
+    {
+        std::cout << "3Dumb.ttf non trouvé, utilisation Arial" << std::endl;
+        fontTitle.loadFromFile(Constants::FONT_PATH);
+    }
 
-for (auto obs : mesObstacles) {
-    obs->update(dt); // Le drone bouge, la barque flotte, la mine reste fixe
+    if (!fontText.loadFromFile(Constants::FONT_PATH_TEXT))
+    {
+        std::cout << "2Dumb.ttf non trouvé, utilisation Arial" << std::endl;
+        fontText.loadFromFile(Constants::FONT_PATH);
+    }
+
+    // Création du jeu avec la police de texte (2Dumb)
+    Game game(window, fontText);
+
+    // Application des polices (titre en 3Dumb)
+    game.applyFonts(fontTitle, fontText);
+
+    game.run();
+
+    return 0;
 }
-
-// --- Dans la partie dessin ---
-window.clear();
-for (auto obs : mesObstacles) {
-    obs->draw(window);
-}
-window.display();
